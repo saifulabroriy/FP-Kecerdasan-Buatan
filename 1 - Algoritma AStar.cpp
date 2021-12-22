@@ -19,7 +19,7 @@ int cari_nilai(int nilai);							// untuk mencari posisi yang seharusnya dari se
 int manhattan_distance(int papan[5][5]);
 int cek_gerakan(int gerakan);						// untuk memastikan gerakan tidak keluar dari papan
 int gerak(int gerakan);								// untuk menggerakkan 0 pada papan acak
-int greedy(int heuristik, int &cost);							// untuk menentukan gerakan mana yang akan diambil parameter 0 = manhattan, parameter 1 = herustik buatan sendiri
+int astar(int heuristik, int &cost);							// untuk menentukan gerakan mana yang akan diambil parameter 0 = manhattan, parameter 1 = herustik buatan sendiri
 int generate_id(int papan[5][5]);					// untuk membuat id khusus yang digunakan untuk menandai apakah papan berulang
 int cek_rute(int id);								// untuk mengecek apakah rute yang akan dilewati sama dengan sebelumnya
 int custom_distance(int papan[5][5]);				// nilai heuristik buatan sendiri (Menghitung banyaknya posisi puzzle yang benar)
@@ -53,9 +53,10 @@ main(){
 		total_waktu = 0;
 		int cost = 0; 					// nilai G(n)
 		
-		system("CLS");														//tampilkan menu
-		printf("1. Algoritma Greedy dengan Manhattan Distance\n");
-		printf("2. Algoritma Greedy dengan heuristik buatan sendiri\n");
+		system("CLS");
+		printf("\t\t----------------\n\t\t24-PUZZLE SOLVER\n\t\t----------------\n\t\t\t      \n\n");														//tampilkan menu
+		printf("1. Algoritma A* dengan Manhattan Distance\n");
+		printf("2. Algoritma A* dengan heuristik buatan sendiri\n");
 		printf("0. Keluar \n\n");
 		printf("Pilih metode pencarian : ");
 		scanf("%d", &menu);
@@ -63,29 +64,32 @@ main(){
 		switch(menu){
 			case 1 :
 				acak_papan();										// setiap memulai ulang pencarian papan selalu diacak secara otomatis
-				printf("\nPapan awal : \n");
+				system("CLS");
+				printf("\nPENCARIAN A* DENGAN MANHATTAN DISTANCE\n");
+				printf("\n==== Initial Board Configuration ====\n\n");
 				cetak_papan(papan_acak);
+				printf("\n=====================================\n");
 				nilai_manhattan = manhattan_distance(papan_acak);	// cek nilai manhattan, apakah papan acak belum mencapai goal?
 				while(nilai_manhattan !=0 && papan_acak != papan_goal){						// proses penyelesaian puzzle
 					timer_mulai = clock();							// mulai menghitung waktu
-					indeks_gerakan = greedy(0, cost);						// lakukan pergerakan menggunakan heuristik manhattan
-					if(indeks_gerakan == 0){						// untuk mendeteksi gerakan yang dilakukan fungsi greedy
-						strcpy(gerakan, "Atas");
+					indeks_gerakan = astar(0, cost);						// lakukan pergerakan menggunakan heuristik manhattan
+					if(indeks_gerakan == 0){						// untuk mendeteksi gerakan yang dilakukan fungsi astar
+						strcpy(gerakan, "UP");
 					}
 					else if(indeks_gerakan == 1){
-						strcpy(gerakan, "Bawah");
+						strcpy(gerakan, "DOWN");
 					}
 					else if(indeks_gerakan == 2){
-						strcpy(gerakan, "Kanan");
+						strcpy(gerakan, "RIGHT");
 					}
 					else if(indeks_gerakan == 3){
-						strcpy(gerakan, "Kiri");
+						strcpy(gerakan, "LEFT");
 					}
 					else{
-						printf("\n\nStep greedy : Puzzle unsolved\n");
+						printf("\n\nStep A* : Puzzle unsolved\n");
 						break;
 					} 
-					printf("\n\nStep greedy : %s\n", gerakan);
+					printf("\n\n%s\n", gerakan);
 					cetak_papan(papan_acak);
 					
 					timer_selesai = clock();							// catat waktu yang dihabiskan dalam sekali gerak
@@ -102,29 +106,32 @@ main(){
 				break;
 			case 2 :										// semua sama dengan case 1, hanya berbeda fungsi heuristik
 				acak_papan();
-				printf("Papan awal : \n");
+				system("CLS");
+				printf("\nPENCARIAN A* DENGAN HEURISTIK BUATAN SENDIRI\n");
+				printf("\n==== Initial Board Configuration ====\n\n");
 				cetak_papan(papan_acak);
+				printf("\n=====================================\n");
 				nilai_custom = custom_distance(papan_acak);
 				while(nilai_custom != 25 && papan_acak != papan_goal){						// proses penyelesaian puzzle
 					timer_mulai = clock();
-					indeks_gerakan = greedy(1, cost);
+					indeks_gerakan = astar(1, cost);
 					if(indeks_gerakan == 0){
-						strcpy(gerakan, "Atas");
+						strcpy(gerakan, "UP");
 					}
 					else if(indeks_gerakan == 1){
-						strcpy(gerakan, "Bawah");
+						strcpy(gerakan, "DOWN");
 					}
 					else if(indeks_gerakan == 2){
-						strcpy(gerakan, "Kanan");
+						strcpy(gerakan, "RIGHT");
 					}
 					else if(indeks_gerakan == 3){
-						strcpy(gerakan, "Kiri");
+						strcpy(gerakan, "LEFT");
 					}
 					else{
-						printf("\n\nStep greedy : Puzzle unsolved\n");
+						printf("\n\nPuzzle unsolved\n");
 						break;
 					}
-					printf("\n\nStep custom : %s\n", gerakan);
+					printf("\n\n%s\n", gerakan);
 					cetak_papan(papan_acak);
 					
 					timer_selesai = clock();
@@ -141,7 +148,13 @@ main(){
 			case 0 :							// untuk keluar dari program
 				on = false;
 				system("CLS");
-				printf("Have a Nice Day :)");
+				printf("\n\tPROGRAM DIBUAT OLEH :\n\n");
+				printf("\n\t1. Anneke Shavira M. (19081010041) \n");
+				printf("\n\t2. M. Mushthafainal Akhyar M (19081010042) \n");
+				printf("\n\t3. Saiful Abroriy (19081010045) \n");
+				printf("\n\t4. Rizqy Ahsana Putri (19081010058) \n");
+				printf("\n\t5. Aniisah Eka Rahmawati (19081010063) \n");
+				printf("\n\t6. Rifki Setiawan (19081010134) \n");
 				break;
 			default :
 				fflush(stdin);
@@ -276,7 +289,7 @@ int gerak(int gerakan){			//0 = atas, 1 = bawah, 2 = kanan, 3 = kiri
 	else return 0;
 }
 
-int greedy(int heuristik, int &cost){									//0 = manhattan, 1 = buatan sendiri
+int astar(int heuristik, int &cost){									//0 = manhattan, 1 = buatan sendiri
 	int terkecil = 200000000, terbesar = 0;	
 	int available = 0;					// untuk mengecek apakah node sudah dikunjungi
 	int indeks_terkecil;
